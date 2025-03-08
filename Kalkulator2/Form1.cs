@@ -37,20 +37,12 @@ namespace Kalkulator2
         {
             {
                 {
-                    if (it == 0)
                     {
+
                         Int32.TryParse(textBox1.Text, out a);
-                        it++;
-                    }
-                    else
-                    {
-                        Int32.TryParse(textBox1.Text, out b);
-                        it++;
-                    }
-                    button15_Click(sender, e);
-                    if (it == 2)
-                    {
-                        typ = 3;
+                        button15_Click(sender, e);
+                        typ = 4;
+
                     }
                 }
             }
@@ -105,26 +97,18 @@ namespace Kalkulator2
         {
             {
                 {
-                    if (it == 0)
-                    {
-                        Int32.TryParse(textBox1.Text, out a);
-                        it++;
-                    }
-                    else
-                    {
-                        Int32.TryParse(textBox1.Text, out b);
-                        it++;
-                    }
+                    
+                    Int32.TryParse(textBox1.Text, out a);
                     button15_Click(sender, e);
-                    if (it == 2)
-                    {
-                        typ = 1;
-                    }
+                    typ = 1;
+                  
                 }
             }
         }
         private void button14_Click(object sender, EventArgs e)
         {
+            Int32.TryParse(textBox1.Text, out b);
+            button15_Click(sender, e);
             if (typ == 1)
             {
                 result= a + b;
@@ -139,7 +123,13 @@ namespace Kalkulator2
             }
             else if (typ == 4)
             {
-                result = a / b;
+                if(a==0 || b == 0)
+                {
+                    textBox1.Text = "ERROR";
+                    return;
+                }
+                else
+                    result = a / b;
             }
             textBox1.Text = result.ToString();
         }
@@ -148,21 +138,11 @@ namespace Kalkulator2
         {
             {
                 {
-                    if (it == 0)
-                    {
-                        Int32.TryParse(textBox1.Text, out a);
-                        it++;
-                    }
-                    else
-                    {
-                        Int32.TryParse(textBox1.Text, out b);
-                        it++;
-                    }
+
+                    Int32.TryParse(textBox1.Text, out a);
                     button15_Click(sender, e);
-                    if (it == 2)
-                    {
-                        typ = 2;
-                    }
+                    typ = 2;
+
                 }
             }
         }
@@ -171,24 +151,18 @@ namespace Kalkulator2
         {
             {
                 {
-                    if (it == 0)
-                    {
-                        Int32.TryParse(textBox1.Text, out a);
-                        it++;
-                    }
-                    else
-                    {
-                        Int32.TryParse(textBox1.Text, out b);
-                        it++;
-                    }
+
+                    Int32.TryParse(textBox1.Text, out a);
                     button15_Click(sender, e);
-                    if (it == 2)
-                    {
-                        result = a * b;
-                        it = 0;
-                    }
+                    typ = 3;
+
                 }
             }
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = textBox1.Text + "0";
         }
     }
 }
