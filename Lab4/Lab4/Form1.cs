@@ -45,7 +45,7 @@ namespace Lab4
             pictureBox1.Image = Image.FromFile("C:\\Users\\Fryderyk\\Documents\\GitHub\\ProgramowanieWizualne\\Lab4\\image1.jpg");
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonE_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image != null)
             {
