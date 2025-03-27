@@ -90,7 +90,7 @@ namespace Lab4
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            pictureBox1.Image = Image.FromFile("image1.jpg");
+            pictureBox1.Image = Properties.Resources.image1;
         }
 
         private void button2_Click(object sender, EventArgs e)
