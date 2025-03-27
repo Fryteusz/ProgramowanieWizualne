@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,21 @@ namespace Lab4
         public Form1()
         {
             InitializeComponent();
+        }
+        private Bitmap ConvertToNegative(Bitmap oryginal)
+        {
+            Bitmap negatyw = new Bitmap(oryginal.Width, oryginal.Height, PixelFormat.Format32bppArgb);
+
+            for (int x = 0; x < oryginal.Width; x++)
+            {
+                for (int y = 0; y < oryginal.Height; y++)
+                {
+                    Color kolor = oryginal.GetPixel(x, y);
+                    Color negatywnyKolor = Color.FromArgb(255 - kolor.R, 255 - kolor.G, 255 - kolor.B);
+                    negatyw.SetPixel(x, y, negatywnyKolor);
+                }
+            }
+            return negatyw;
         }
         private Bitmap RotateImage(Bitmap oryginalnyObraz, float kąt)
         {
@@ -61,6 +77,16 @@ namespace Lab4
                     Bitmap oryginalnyObraz = new Bitmap(pictureBox1.Image); 
                     Bitmap obroconyObraz = RotateImage(oryginalnyObraz, kąt);
                     pictureBox1.Image = obroconyObraz;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(pictureBox1.Image != null)
+            {
+                Bitmap oryginalnyObraz = new Bitmap(pictureBox1.Image);
+                Bitmap negatyw = ConvertToNegative(oryginalnyObraz);
+                pictureBox1.Image = negatyw;
             }
         }
     }
