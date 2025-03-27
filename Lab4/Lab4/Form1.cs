@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,6 +16,29 @@ namespace Lab4
         public Form1()
         {
             InitializeComponent();
+        }
+        private Bitmap TylkoZielony(Bitmap oryginal)
+        {
+            Bitmap tylkoZielony = new Bitmap(oryginal.Width, oryginal.Height, oryginal.PixelFormat);
+
+            for (int x = 0; x < oryginal.Width; x++)
+            {
+                for (int y = 0; y < oryginal.Height; y++)
+                {
+                    Color kolor = oryginal.GetPixel(x, y);
+                    int prógZieleni = 100;
+                    int prógCzerwieniINiebieskiego = 100;
+                    if (kolor.G >= prógZieleni && kolor.R <= prógCzerwieniINiebieskiego && kolor.B <= prógCzerwieniINiebieskiego)
+                    {
+                        tylkoZielony.SetPixel(x, y, kolor);
+                    }
+                    else
+                    {
+                        tylkoZielony.SetPixel(x, y, Color.Black);
+                    }
+                }
+            }
+            return tylkoZielony;
         }
 
         public static Bitmap Rotate180FlipVertical(Bitmap oryginalnyObraz)
@@ -109,6 +132,22 @@ namespace Lab4
             Bitmap obroconyIOdbityObraz = RotateImage(Rotate180FlipVertical(oryginalnyObraz),180);
             pictureBox1.Image = obroconyIOdbityObraz;
             pictureBox1.Refresh();
+        }
+
+        private void buttonE_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null)
+            {
+                {
+                    Bitmap oryginalnyObraz = new Bitmap(pictureBox1.Image);
+                    Bitmap tylkoZielonyObraz = TylkoZielony(oryginalnyObraz);
+                    pictureBox1.Image = tylkoZielonyObraz;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Najpierw wczytaj obrazek.");
+            }
         }
     }
 }
