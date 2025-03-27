@@ -17,6 +17,23 @@ namespace Lab4
         {
             InitializeComponent();
         }
+
+        public static Bitmap Rotate180FlipVertical(Bitmap oryginalnyObraz)
+        {
+            Bitmap obroconyIOdbityObraz = new Bitmap(oryginalnyObraz.Width, oryginalnyObraz.Height, oryginalnyObraz.PixelFormat);
+
+            using (Graphics g = Graphics.FromImage(obroconyIOdbityObraz))
+            {
+                g.TranslateTransform(oryginalnyObraz.Width / 2, oryginalnyObraz.Height / 2);
+                g.RotateTransform(180);
+                g.ScaleTransform(1, -1);
+
+                g.TranslateTransform(-oryginalnyObraz.Width / 2, -oryginalnyObraz.Height / 2);
+                g.DrawImage(oryginalnyObraz, new Point(0, 0));
+            }
+
+            return obroconyIOdbityObraz;
+                }
         private Bitmap ConvertToNegative(Bitmap oryginal)
         {
             Bitmap negatyw = new Bitmap(oryginal.Width, oryginal.Height, PixelFormat.Format32bppArgb);
@@ -34,18 +51,14 @@ namespace Lab4
         }
         private Bitmap RotateImage(Bitmap oryginalnyObraz, float kąt)
         {
-            double radians = Math.Abs(kąt * Math.PI / 180.0);
-            int szerokosc = (int)(Math.Abs(oryginalnyObraz.Width * Math.Cos(radians)) + Math.Abs(oryginalnyObraz.Height * Math.Sin(radians)));
-            int wysokosc = (int)(Math.Abs(oryginalnyObraz.Height * Math.Cos(radians)) + Math.Abs(oryginalnyObraz.Width * Math.Sin(radians)));
-
-            Bitmap obroconyObraz = new Bitmap(szerokosc, wysokosc);
+            Bitmap obroconyObraz = new Bitmap(oryginalnyObraz.Width, oryginalnyObraz.Height);
 
             using (Graphics g = Graphics.FromImage(obroconyObraz))
             {
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                g.TranslateTransform(szerokosc / 2, wysokosc / 2);
+                g.TranslateTransform(oryginalnyObraz.Width / 2, oryginalnyObraz.Height / 2);
                 g.RotateTransform(kąt);
                 g.DrawImage(oryginalnyObraz, -oryginalnyObraz.Width / 2, -oryginalnyObraz.Height / 2);
             }
@@ -65,7 +78,7 @@ namespace Lab4
                     if (radioButton1.Checked)
                     {
                         kąt = 90;
-                    }
+                }
                     else if (radioButton2.Checked)
                     {
                         kąt = 180;
@@ -73,7 +86,7 @@ namespace Lab4
                     else if (radioButton3.Checked)
                     {
                         kąt = 270;
-                    }
+                }
                     Bitmap oryginalnyObraz = new Bitmap(pictureBox1.Image); 
                     Bitmap obroconyObraz = RotateImage(oryginalnyObraz, kąt);
                     pictureBox1.Image = obroconyObraz;
@@ -88,6 +101,14 @@ namespace Lab4
                 Bitmap negatyw = ConvertToNegative(oryginalnyObraz);
                 pictureBox1.Image = negatyw;
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Bitmap oryginalnyObraz = new Bitmap(pictureBox1.Image);
+            Bitmap obroconyIOdbityObraz = RotateImage(Rotate180FlipVertical(oryginalnyObraz),180);
+            pictureBox1.Image = obroconyIOdbityObraz;
+            pictureBox1.Refresh();
         }
     }
 }
