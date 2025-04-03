@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Lab3
 {
@@ -99,14 +100,87 @@ namespace Lab3
             // Jeśli użytkownik wybierze plik i zatwierdzi, wczytaj dane z pliku CSV
             if (openFileDialog1.FileName != "")
             {
-                // Wywołanie funkcji wczytującej dane z pliku CSV
+                // Wywołanie funkcji wczytującej dane z pliku CSV   
                 LoadCSVToDataGridView(openFileDialog1.FileName);
             }
+        }
+            public static void SerializeOsobaToXml(List<Osoba> osoba, string filePath)
+            {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Osoba>), new XmlRootAttribute("osoba"));
+            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                    {
+                        serializer.Serialize(writer, osoba);
+                    }
+                }
+
+            public static Osoba DeserializeFromXML(string fileName)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Osoba));
+            using (TextReader reader = new StreamReader(fileName))
+            {
+                Osoba person = (Osoba)serializer.Deserialize(reader);
+                Console.WriteLine("Obiekt został odczytany z pliku XML.");
+                return person;
+            }
+        }
+        public void DisplayInfo()
+        {
+            Console.WriteLine("Imię: " + Imie);
+            Console.WriteLine("Nazwisko: " + Nazwisko);
+            Console.WriteLine("Wiek: " + Wiek);
+
+        }
+        public List<Osoba> DataToObject()
+        {
+            List<Osoba> listaOsob = new List<Osoba>();
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                Osoba osoba = new Osoba();
+                if (dataGridView1.Columns.Contains("Id"))
+                {
+                    object idValue = row.Cells["Id"].Value;
+                    if (idValue != null && idValue != DBNull.Value && int.TryParse(idValue.ToString(), out int id))
+                    {
+                        osoba.Id = id;
+                    }
+                }
+
+                if (dataGridView1.Columns.Contains("Imie"))
+                {
+                    object imieValue = row.Cells["Imie"].Value;
+                    osoba.Imie = imieValue?.ToString() ?? string.Empty;
+                }
+
+                if (dataGridView1.Columns.Contains("Nazwisko"))
+                {
+                    object nazwiskoValue = row.Cells["Nazwisko"].Value;
+                    osoba.Nazwisko = nazwiskoValue?.ToString() ?? string.Empty;
+                }
+
+                if (dataGridView1.Columns.Contains("Wiek"))
+                {
+                    object wiekValue = row.Cells["Wiek"].Value;
+                    if (wiekValue != null && wiekValue != DBNull.Value && int.TryParse(wiekValue.ToString(), out int wiek))
+                    {
+                        osoba.Wiek = wiek;
+                    }
+                }
+                listaOsob.Add(osoba);
+            }
+            return listaOsob;
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             btnLoadCSV_Click(sender, e);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+           SerializeOsobaToXml(DataToObject(), "osoba.xml");
+
         }
     }
 }
