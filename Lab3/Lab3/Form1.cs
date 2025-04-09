@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Text.Json;
+
 
 namespace Lab3
 {
@@ -66,7 +68,7 @@ namespace Lab3
             if (!File.Exists(filePath))
             {
                 MessageBox.Show("Plik CSV nie istnieje.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                return;
             }
             string[] lines = File.ReadAllLines(filePath);
             // Tworzenie tabeli danych
@@ -108,6 +110,94 @@ namespace Lab3
         {
             btnLoadCSV_Click(sender, e);
         }
+        public static void SerializeOsobaListToJson(List<Osoba> osoby, string filePath)
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
+            string jsonString = JsonSerializer.Serialize(osoby, options);
+            File.WriteAllText(filePath, jsonString, Encoding.UTF8);
+        }
+        public List<Osoba> DataToObject()
+        {
+            List<Osoba> listaOsob = new List<Osoba>();
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                Osoba osoba = new Osoba();
+                if (dataGridView1.Columns.Contains("Id"))
+                {
+                    object idValue = row.Cells["Id"].Value;
+                    if (idValue != null && idValue != DBNull.Value && int.TryParse(idValue.ToString(), out int id))
+                    {
+                        osoba.Id = id;
+                    }
+                }
+
+                if (dataGridView1.Columns.Contains("Imie"))
+                {
+                    object imieValue = row.Cells["Imie"].Value;
+                    osoba.Imie = imieValue?.ToString() ?? string.Empty;
+                }
+
+                if (dataGridView1.Columns.Contains("Nazwisko"))
+                {
+                    object nazwiskoValue = row.Cells["Nazwisko"].Value;
+                    osoba.Nazwisko = nazwiskoValue?.ToString() ?? string.Empty;
+                }
+
+                if (dataGridView1.Columns.Contains("Wiek"))
+                {
+                    object wiekValue = row.Cells["Wiek"].Value;
+                    if (wiekValue != null && wiekValue != DBNull.Value && int.TryParse(wiekValue.ToString(), out int wiek))
+                    {
+                        osoba.Wiek = wiek;
+                    }
+                }
+                listaOsob.Add(osoba);
+            }
+            return listaOsob;
+        }
+        public static List<Osoba> DeserializeOsobaListFromJson(string fileName)
+        {
+            string jsonString = File.ReadAllText(fileName, Encoding.UTF8);
+            List<Osoba> osoby = JsonSerializer.Deserialize<List<Osoba>>(jsonString);
+            return osoby; 
+        }
+
+
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            SerializeOsobaListToJson(DataToObject(), "osoby.json");
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            List<Osoba> listaOsob = DeserializeOsobaListFromJson("osoby.json");
+            if (listaOsob != null)
+            {
+                foreach (Osoba osoba in listaOsob)
+                {
+                        int rowIndex = dataGridView1.Rows.Add();
+                        DataGridViewRow newRow = dataGridView1.Rows[rowIndex];
+
+                        if (dataGridView1.Columns.Contains("Id"))
+                            newRow.Cells["Id"].Value = osoba.Id;
+                        if (dataGridView1.Columns.Contains("Imie"))
+                            newRow.Cells["Imie"].Value = osoba.Imie;
+                        if (dataGridView1.Columns.Contains("Nazwisko"))
+                            newRow.Cells["Nazwisko"].Value = osoba.Nazwisko;
+                        if (dataGridView1.Columns.Contains("Wiek"))
+                            newRow.Cells["Wiek"].Value = osoba.Wiek;
+                    }
+                }
+            }
     }
 }
 
