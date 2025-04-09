@@ -67,7 +67,7 @@ namespace Lab3
             if (!File.Exists(filePath))
             {
                 MessageBox.Show("Plik CSV nie istnieje.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                return;
             }
             string[] lines = File.ReadAllLines(filePath);
             // Tworzenie tabeli danych
@@ -104,23 +104,23 @@ namespace Lab3
                 LoadCSVToDataGridView(openFileDialog1.FileName);
             }
         }
-            public static void SerializeOsobaToXml(List<Osoba> osoba, string filePath)
-            {
+        public static void SerializeOsobaToXml(List<Osoba> osoba, string filePath)
+        {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Osoba>), new XmlRootAttribute("osoba"));
             using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
-                    {
-                        serializer.Serialize(writer, osoba);
-                    }
-                }
+            {
+                serializer.Serialize(writer, osoba);
+            }
+        }
 
-            public static Osoba DeserializeFromXML(string fileName)
+        public static List<Osoba> DeserializeFromXML(string fileName)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(Osoba));
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Osoba>), new XmlRootAttribute("osoba"));
             using (TextReader reader = new StreamReader(fileName))
             {
-                Osoba person = (Osoba)serializer.Deserialize(reader);
+                List<Osoba> persons = (List<Osoba>)serializer.Deserialize(reader);
                 Console.WriteLine("Obiekt został odczytany z pliku XML.");
-                return person;
+                return persons;
             }
         }
         public void DisplayInfo()
@@ -172,6 +172,7 @@ namespace Lab3
             return listaOsob;
         }
 
+
         private void button4_Click(object sender, EventArgs e)
         {
             btnLoadCSV_Click(sender, e);
@@ -179,9 +180,35 @@ namespace Lab3
 
         private void button5_Click(object sender, EventArgs e)
         {
-           SerializeOsobaToXml(DataToObject(), "osoba.xml");
+            SerializeOsobaToXml(DataToObject(), "osoba.xml");
 
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            List<Osoba> listaOsob = DeserializeFromXML("osoba.xml");
+
+            if (listaOsob != null)
+            {
+                dataGridView1.DataSource = null;
+                dataGridView1.Rows.Clear();
+                foreach (Osoba osoba in listaOsob)
+                {
+                    if (osoba != null)
+                    {
+                        int rowIndex = dataGridView1.Rows.Add(); 
+                        DataGridViewRow newRow = dataGridView1.Rows[rowIndex];
+                        if (dataGridView1.Columns.Contains("Id"))
+                            newRow.Cells["Id"].Value = osoba.Id;
+                        if (dataGridView1.Columns.Contains("Imie"))
+                            newRow.Cells["Imie"].Value = osoba.Imie;
+                        if (dataGridView1.Columns.Contains("Nazwisko"))
+                            newRow.Cells["Nazwisko"].Value = osoba.Nazwisko;
+                        if (dataGridView1.Columns.Contains("Wiek"))
+                            newRow.Cells["Wiek"].Value = osoba.Wiek;
+                    }
+                }
+            }
         }
     }
 }
-
