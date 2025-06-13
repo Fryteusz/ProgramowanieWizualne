@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Lab9.MainWindow"
+        Title="Lab9"
+		SizeToContent="WidthAndHeight">
+	<StackPanel x:Name="MainStack" Margin="20" Spacing="10">
+		<TextBlock Text="Wniosek" FontSize="20" FontWeight="Bold" TextAlignment="Center"/>
+
+		<TextBox x:Name="Data" Watermark="Poznań,dnia"/>
+		<TextBox x:Name="Album" Watermark="Numer albumu"/>
+		<TextBox x:Name="NazwiskoImie" Watermark="Nazwisko i imię"/>
+		<TextBox x:Name="SemestrRok" Watermark="Semestr, rok"/>
+		<TextBox x:Name="KierunekStopien" Watermark="Kierunek i stopień studiów"/>
+		<TextBlock Text="Wniosek o przeprowadzenie Egzaminu Komisyjnego:" FontWeight="Bold" Margin="0,10,0,0"/>
+		<TextBox x:Name="Przedmiot" Watermark="Przedmiot"/>
+		<TextBox x:Name="ECTS" Watermark="Punkty ECTS"/>
+		<TextBox x:Name="Prowadzacy" Watermark="Przeprowadzone przez"/>
+		<TextBox x:Name="Uzasadnienie" Watermark="Uzasadnienie"/>
+		<TextBox x:Name="Podpis" Watermark="Podpis studenta"/>
+		<TextBlock Text="Decyzja" FontWeight="Bold" Margin="0,10,0,0"/>
+		<TextBlock Text="Skład komisji" FontWeight="Bold" Margin="0,10,0,0"/>
+		<TextBox x:Name="Kom1" Watermark="1"/>
+		<TextBox x:Name="Kom2" Watermark="2"/>
+		<TextBox x:Name="Kom3" Watermark="3"/>
+		<TextBox x:Name="DataDec" Watermark="Poznań, dnia"/>
+		<TextBox x:Name="Pieczatka" Watermark="Pieczatka i podpis"/>
+
+		<StackPanel Orientation="Horizontal" Spacing="10">
+			<Button Content="Zapisz" Click="Save"/>
+			<Button Content="Wczytaj" Click="Load"/>
+		</StackPanel>
+
+		<ListBox x:Name="EntriesList" Height="200" SelectionChanged="OnEntrySelected"/>
+	</StackPanel>
+</Window>
